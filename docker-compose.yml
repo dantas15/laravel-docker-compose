@@ -48,3 +48,37 @@ services:
       - "9000:9000"
     networks:
       - laravel
+  
+  composer:
+    image: composer:latest
+    container_name: composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ['composer']
+    networks:
+      - laravel
+    
+  node:
+    image: node:lts-alpine
+    container_name: node
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: []
+    networks:
+      - laravel
+  
+  artisan:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: artisan
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - mysql
+    working_dir: /var/www/html
+    entrypoint: ['/var/www/html/artisan']
+    networks:
+      - laravel
